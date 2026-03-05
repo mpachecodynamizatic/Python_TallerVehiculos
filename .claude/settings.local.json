@@ -21,7 +21,8 @@
       "Bash(python manage.py:*)",
       "Bash(chmod:*)",
       "Bash(.venv/Scripts/activate)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(find:*)"
     ]
   }
 }

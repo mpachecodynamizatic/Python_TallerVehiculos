@@ -44,3 +44,17 @@ Consulta la carpeta .claude/skills/ para guias detalladas:
 - [ ] Frontend base
 - [ ] Tests
 - [ ] Deploy
+
+## Reglas Específicas
+- Siempre usar español para nombres de variables y comentarios
+- Validar todos los inputs del usuario
+- Incluir logging en operaciones críticas
+- Seguir el patrón Repository para acceso a datos
+
+## Preferencias de Estilo
+- Usar type hints en todas las funciones
+- Docstrings en formato Google Style
+- Máximo 80 caracteres por línea
+- Nombres descriptivos, evitar abreviaturas
+- Las pantallas utilizar el 80% del tamaño de la pantalla
+- Los grids/cruds hacerlos con paginacion, con ordenacion de cualquier columna, posibilidad de aplicar filtros sobre las columnas y un buscador global.

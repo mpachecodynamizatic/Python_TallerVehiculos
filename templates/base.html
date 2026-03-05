@@ -84,8 +84,12 @@
                                 <div class="font-medium">{{ user.username }}</div>
                                 <div class="text-gray-500">{{ user.email }}</div>
                             </div>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mi Perfil</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Configuración</a>
+                            <a href="{% url 'usuarios:perfil' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mi Perfil</a>
+                            <a href="{% url 'usuarios:editar_perfil' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Editar Perfil</a>
+                            <a href="{% url 'usuarios:cambiar_password' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Cambiar Contraseña</a>
+                            {% if user.es_admin %}
+                            <a href="{% url 'usuarios:listar' %}" class="block px-4 py-2 text-sm text-blue-600 hover:bg-gray-100 font-medium border-t">Gestión de Usuarios</a>
+                            {% endif %}
                             <form method="post" action="{% url 'logout' %}">
                                 {% csrf_token %}
                                 <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">

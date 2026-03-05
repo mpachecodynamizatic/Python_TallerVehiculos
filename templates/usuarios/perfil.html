@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Perfil{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- Encabezado -->
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Mi Perfil</h1>
+        <p class="text-gray-600 mt-2">Información de tu cuenta</p>
+    </div>
+
+    <!-- Card del perfil -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <!-- Header con foto -->
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-8">
+            <div class="flex items-center">
+                {% if usuario.foto_perfil %}
+                <img src="{{ usuario.foto_perfil.url }}" alt="{{ usuario.username }}"
+                     class="h-32 w-32 rounded-full border-4 border-white object-cover">
+                {% else %}
+                <div class="h-32 w-32 rounded-full border-4 border-white bg-white flex items-center justify-center">
+                    <span class="text-5xl font-bold text-blue-600">{{ usuario.username|first|upper }}</span>
+                </div>
+                {% endif %}
+                <div class="ml-6 text-white">
+                    <h2 class="text-3xl font-bold">{{ usuario.get_full_name|default:usuario.username }}</h2>
+                    <p class="text-blue-100 text-lg">@{{ usuario.username }}</p>
+                    <span class="inline-block mt-2 px-3 py-1 bg-white bg-opacity-20 rounded-full text-sm font-medium">
+                        {{ usuario.get_rol_display }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido -->
+        <div class="p-6">
+            <!-- Acciones -->
+            <div class="mb-6 flex gap-4">
+                <a href="{% url 'usuarios:editar_perfil' %}"
+                   class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 text-center">
+                    Editar Perfil
+                </a>
+                <a href="{% url 'usuarios:cambiar_password' %}"
+                   class="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200 text-center">
+                    Cambiar Contraseña
+                </a>
+            </div>
+
+            <!-- Información -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Email -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Correo Electrónico</label>
+                    <p class="text-lg text-gray-900">{{ usuario.email }}</p>
+                </div>
+
+                <!-- Teléfono -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Teléfono</label>
+                    <p class="text-lg text-gray-900">{{ usuario.telefono|default:"No especificado" }}</p>
+                </div>
+
+                <!-- Rol -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Rol en el Sistema</label>
+                    <p class="text-lg text-gray-900">{{ usuario.get_rol_display }}</p>
+                </div>
+
+                <!-- Estado -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Estado</label>
+                    {% if usuario.activo %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        Activo
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                        Inactivo
+                    </span>
+                    {% endif %}
+                </div>
+
+                <!-- Fecha de creación -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Miembro Desde</label>
+                    <p class="text-lg text-gray-900">{{ usuario.fecha_creacion|date:"d/m/Y" }}</p>
+                </div>
+
+                <!-- Última conexión -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Última Conexión</label>
+                    <p class="text-lg text-gray-900">
+                        {% if usuario.ultima_conexion %}
+                            {{ usuario.ultima_conexion|date:"d/m/Y H:i" }}
+                        {% else %}
+                            <span class="text-gray-400">Esta es tu primera sesión</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesión Cerrada - Taller de Vehículos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center">
+        <div class="text-6xl mb-4">👋</div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Sesión Cerrada</h1>
+        <p class="text-gray-600 mb-8">Has cerrado sesión correctamente.</p>
+        <a href="{% url 'login' %}" class="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-8 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105">
+            Volver a Iniciar Sesión
+        </a>
+    </div>
+</body>
+</html>

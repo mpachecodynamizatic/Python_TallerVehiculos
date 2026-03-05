@@ -28,6 +28,9 @@ urlpatterns = [
 
     # Core app (home y dashboard)
     path('', include('apps.core.urls')),
+
+    # Gestión de usuarios
+    path('usuarios/', include('apps.usuarios.urls')),
 ]
 
 # Servir archivos media en desarrollo

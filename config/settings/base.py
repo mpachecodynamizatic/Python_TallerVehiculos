@@ -144,8 +144,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Modelo de usuario personalizado (se configurará en FASE 1)
-# AUTH_USER_MODEL = 'usuarios.Usuario'
+# Modelo de usuario personalizado (FASE 1)
+AUTH_USER_MODEL = 'usuarios.Usuario'
 
 # Login URLs
 LOGIN_URL = 'login'

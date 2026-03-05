@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Usuario{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="mb-6 text-center">
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
+                <svg class="h-8 w-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">¿Eliminar Usuario?</h2>
+            <p class="text-gray-600">Esta acción no se puede deshacer.</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-4 mb-6">
+            <div class="flex items-center">
+                {% if usuario.foto_perfil %}
+                <img src="{{ usuario.foto_perfil.url }}" alt="{{ usuario.username }}" class="h-16 w-16 rounded-full object-cover">
+                {% else %}
+                <div class="h-16 w-16 rounded-full bg-blue-600 flex items-center justify-center text-white text-xl font-medium">
+                    {{ usuario.username|first|upper }}
+                </div>
+                {% endif %}
+                <div class="ml-4">
+                    <div class="font-medium text-gray-900">{{ usuario.get_full_name|default:usuario.username }}</div>
+                    <div class="text-sm text-gray-500">@{{ usuario.username }} - {{ usuario.email }}</div>
+                    <span class="inline-block mt-1 px-2 py-1 text-xs rounded-full bg-gray-200 text-gray-700">
+                        {{ usuario.get_rol_display }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="flex justify-end gap-4">
+                <a href="{% url 'usuarios:listar' %}" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Cancelar
+                </a>
+                <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                    Sí, Eliminar Usuario
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
