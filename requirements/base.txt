@@ -1,0 +1,15 @@
+# Django core
+Django>=6.0,<6.1
+
+# Environment variables
+django-environ>=0.13.0
+python-dotenv>=1.0.0
+
+# Extensions
+django-extensions>=4.1.0
+
+# Images
+Pillow>=12.0.0
+
+# Utilities
+python-dateutil>=2.8.2

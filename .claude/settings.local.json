@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pwsh -File \"c:\\\\Users\\\\mpacheco\\\\Documents\\\\GITHUB\\\\PYTHON\\\\Python_Init\\\\init-python-project.ps1\" -ProjectName \"test-app\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"c:\\\\Users\\\\mpacheco\\\\Documents\\\\GITHUB\\\\PYTHON\\\\Python_Init\\\\init-python-project.ps1\" -ProjectName \"test-app\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"c:\\\\Users\\\\mpacheco\\\\Documents\\\\GITHUB\\\\PYTHON\\\\Python_Init\\\\init-python-project.ps1\" -ProjectName \"proyecto-demo\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"c:\\\\Users\\\\mpacheco\\\\Documents\\\\GITHUB\\\\PYTHON\\\\Python_Init\\\\init-python-project.ps1\" -ProjectName \"app-test\")",
+      "Bash(python -m venv:*)",
+      "Bash(source:*)",
+      "Bash(pip install:*)",
+      "Bash(django-admin startproject:*)",
+      "Bash(for app in core usuarios clientes vehiculos citas ordenes inventario compras facturacion dashboard)",
+      "Bash(do python ../manage.py startapp $app)",
+      "Bash(done)",
+      "Bash(python manage.py makemigrations:*)",
+      "Bash(python manage.py migrate:*)",
+      "Bash(DJANGO_SUPERUSER_PASSWORD=admin123 python manage.py:*)",
+      "Bash(timeout 5 python manage.py runserver:*)",
+      "Bash(ls:*)",
+      "Bash(python manage.py check:*)",
+      "Bash(python manage.py:*)",
+      "Bash(chmod:*)",
+      "Bash(.venv/Scripts/activate)",
+      "Bash(python:*)"
+    ]
+  }
+}
