@@ -6,153 +6,232 @@
 <div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
     <div class="mb-6">
         <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p class="mt-2 text-sm text-gray-700">
-            Bienvenido al sistema de gestión de taller de vehículos
-        </p>
+        <p class="mt-2 text-sm text-gray-700">Bienvenido, {{ request.user.get_full_name|default:request.user.username }}</p>
     </div>
 
-<!-- Stats Grid -->
-<div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-    <!-- Stat Card 1 -->
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="p-5">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                </div>
-                <div class="ml-5 w-0 flex-1">
-                    <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">
-                            Total Clientes
-                        </dt>
-                        <dd class="flex items-baseline">
-                            <div class="text-2xl font-semibold text-gray-900">
-                                0
-                            </div>
-                        </dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
 
-    <!-- Stat Card 2 -->
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="p-5">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                </div>
-                <div class="ml-5 w-0 flex-1">
-                    <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">
-                            Citas Hoy
-                        </dt>
-                        <dd class="flex items-baseline">
-                            <div class="text-2xl font-semibold text-gray-900">
-                                0
-                            </div>
-                        </dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Stat Card 3 -->
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="p-5">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                </div>
-                <div class="ml-5 w-0 flex-1">
-                    <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">
-                            Órdenes Activas
-                        </dt>
-                        <dd class="flex items-baseline">
-                            <div class="text-2xl font-semibold text-gray-900">
-                                0
-                            </div>
-                        </dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Stat Card 4 -->
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="p-5">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <div class="ml-5 w-0 flex-1">
-                    <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">
-                            Facturación del Mes
-                        </dt>
-                        <dd class="flex items-baseline">
-                            <div class="text-2xl font-semibold text-gray-900">
-                                €0
-                            </div>
-                        </dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Welcome Card -->
-<div class="bg-white shadow rounded-lg p-6">
-    <div class="text-center">
-        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <h3 class="mt-2 text-lg font-medium text-gray-900">¡Proyecto Configurado Exitosamente!</h3>
-        <p class="mt-1 text-sm text-gray-500">
-            La FASE 0 está completa. El sistema está listo para comenzar el desarrollo de las funcionalidades.
-        </p>
-        <div class="mt-6">
-            <div class="flex items-center justify-center space-x-4">
+        <a href="{% url 'clientes:listar' %}" class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow">
+            <div class="p-5">
                 <div class="flex items-center">
-                    <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span class="ml-2 text-sm text-gray-600">Django 6.0</span>
-                </div>
-                <div class="flex items-center">
-                    <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span class="ml-2 text-sm text-gray-600">HTMX</span>
-                </div>
-                <div class="flex items-center">
-                    <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span class="ml-2 text-sm text-gray-600">Alpine.js</span>
-                </div>
-                <div class="flex items-center">
-                    <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span class="ml-2 text-sm text-gray-600">Tailwind CSS</span>
+                    <div class="flex-shrink-0 bg-blue-100 rounded-full p-3">
+                        <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Total Clientes</dt>
+                            <dd class="text-2xl font-semibold text-gray-900">{{ total_clientes }}</dd>
+                        </dl>
+                    </div>
                 </div>
             </div>
+            <div class="bg-blue-50 px-5 py-2">
+                <span class="text-xs text-blue-600">{{ total_vehiculos }} vehículo{{ total_vehiculos|pluralize }} registrado{{ total_vehiculos|pluralize }}</span>
+            </div>
+        </a>
+
+        <a href="{% url 'citas:listar' %}" class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-green-100 rounded-full p-3">
+                        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Citas Hoy</dt>
+                            <dd class="text-2xl font-semibold text-gray-900">{{ citas_hoy }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-green-50 px-5 py-2">
+                <span class="text-xs text-green-600">Ver próximas citas ↓</span>
+            </div>
+        </a>
+
+        <a href="{% url 'ordenes:listar' %}" class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-yellow-100 rounded-full p-3">
+                        <svg class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Órdenes Activas</dt>
+                            <dd class="text-2xl font-semibold text-gray-900">{{ ordenes_activas }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-yellow-50 px-5 py-2">
+                <span class="text-xs text-yellow-600">{{ ordenes_mes }} este mes</span>
+            </div>
+        </a>
+
+        <a href="{% url 'facturacion:listar' %}" class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-purple-100 rounded-full p-3">
+                        <svg class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Facturación del Mes</dt>
+                            <dd class="text-2xl font-semibold text-gray-900">{{ facturacion_mes|floatformat:2 }} €</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-purple-50 px-5 py-2">
+                {% if facturas_vencidas %}
+                <span class="text-xs text-red-600">⚠ {{ facturas_vencidas }} factura{{ facturas_vencidas|pluralize }} vencida{{ facturas_vencidas|pluralize }}</span>
+                {% else %}
+                <span class="text-xs text-purple-600">Sin facturas vencidas</span>
+                {% endif %}
+            </div>
+        </a>
+    </div>
+
+    <!-- Contenido principal: 3 columnas -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Próximas citas -->
+        <div class="lg:col-span-1 bg-white shadow rounded-lg">
+            <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h2 class="text-base font-semibold text-gray-900">Próximas Citas</h2>
+                <a href="{% url 'citas:crear' %}" class="text-xs text-blue-600 hover:underline">+ Nueva</a>
+            </div>
+            <ul class="divide-y divide-gray-100">
+                {% for cita in proximas_citas %}
+                <li class="px-5 py-3">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">{{ cita.cliente.nombre }} {{ cita.cliente.apellidos }}</p>
+                            <p class="text-xs text-gray-500">{{ cita.vehiculo.marca }} {{ cita.vehiculo.modelo }} · {{ cita.get_tipo_servicio_display }}</p>
+                        </div>
+                        <div class="text-right flex-shrink-0 ml-2">
+                            <p class="text-xs font-medium text-gray-800">{{ cita.fecha_hora|date:"d/m" }}</p>
+                            <p class="text-xs text-gray-500">{{ cita.fecha_hora|date:"H:i" }}</p>
+                        </div>
+                    </div>
+                </li>
+                {% empty %}
+                <li class="px-5 py-6 text-center text-sm text-gray-400">No hay citas próximas</li>
+                {% endfor %}
+            </ul>
+            {% if proximas_citas %}
+            <div class="px-5 py-3 border-t border-gray-100">
+                <a href="{% url 'citas:listar' %}" class="text-xs text-blue-600 hover:underline">Ver todas las citas →</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Órdenes recientes -->
+        <div class="lg:col-span-2 bg-white shadow rounded-lg">
+            <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h2 class="text-base font-semibold text-gray-900">Órdenes de Trabajo Recientes</h2>
+                <a href="{% url 'ordenes:crear' %}" class="text-xs text-blue-600 hover:underline">+ Nueva</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Nº Orden</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Cliente</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Vehículo</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Estado</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for orden in ordenes_recientes %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2 text-sm">
+                                <a href="{% url 'ordenes:detalle' orden.pk %}" class="text-blue-600 hover:underline font-mono">{{ orden.numero_orden }}</a>
+                            </td>
+                            <td class="px-4 py-2 text-sm text-gray-900">{{ orden.cliente.nombre }} {{ orden.cliente.apellidos }}</td>
+                            <td class="px-4 py-2 text-sm text-gray-500">{{ orden.vehiculo.marca }} {{ orden.vehiculo.modelo }}</td>
+                            <td class="px-4 py-2">
+                                {% if orden.estado == 'ABIE' %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Abierta</span>
+                                {% elif orden.estado == 'PROC' %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">En Proceso</span>
+                                {% elif orden.estado == 'COMP' %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Completada</span>
+                                {% elif orden.estado == 'PAUS' %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">Pausada</span>
+                                {% else %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">Cancelada</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-4 py-2 text-sm text-gray-500">{{ orden.fecha_apertura|date:"d/m/Y" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="px-4 py-6 text-center text-sm text-gray-400">No hay órdenes recientes</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if ordenes_recientes %}
+            <div class="px-5 py-3 border-t border-gray-100">
+                <a href="{% url 'ordenes:listar' %}" class="text-xs text-blue-600 hover:underline">Ver todas las órdenes →</a>
+            </div>
+            {% endif %}
         </div>
     </div>
-</div>
+
+    <!-- Facturas pendientes -->
+    {% if facturas_pendientes %}
+    <div class="mt-6 bg-white shadow rounded-lg">
+        <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+            <h2 class="text-base font-semibold text-gray-900">Facturas Pendientes de Cobro</h2>
+            <a href="{% url 'facturacion:listar' %}" class="text-xs text-blue-600 hover:underline">Ver todas →</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Nº Factura</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Cliente</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Total</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Vencimiento</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Estado</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for factura in facturas_pendientes %}
+                    <tr class="hover:bg-gray-50 {% if factura.estado == 'VENC' %}bg-red-50{% endif %}">
+                        <td class="px-4 py-2 text-sm">
+                            <a href="{% url 'facturacion:detalle' factura.pk %}" class="text-blue-600 hover:underline font-mono">{{ factura.numero_factura }}</a>
+                        </td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ factura.cliente.nombre }} {{ factura.cliente.apellidos }}</td>
+                        <td class="px-4 py-2 text-sm font-medium text-gray-900">{{ factura.total|floatformat:2 }} €</td>
+                        <td class="px-4 py-2 text-sm {% if factura.estado == 'VENC' %}text-red-600 font-medium{% else %}text-gray-500{% endif %}">{{ factura.fecha_vencimiento|date:"d/m/Y" }}</td>
+                        <td class="px-4 py-2">
+                            {% if factura.estado == 'VENC' %}
+                            <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Vencida</span>
+                            {% elif factura.estado == 'PARC' %}
+                            <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">Parcial</span>
+                            {% else %}
+                            <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Pendiente</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
 </div>
 {% endblock %}

@@ -40,6 +40,18 @@ urlpatterns = [
 
     # Gestión de citas
     path('citas/', include('apps.citas.urls')),
+
+    # Gestión de órdenes de trabajo
+    path('ordenes/', include('apps.ordenes.urls')),
+
+    # Gestión de inventario
+    path('inventario/', include('apps.inventario.urls')),
+
+    # Gestión de compras y proveedores
+    path('compras/', include('apps.compras.urls')),
+
+    # Gestión de facturación
+    path('facturas/', include('apps.facturacion.urls')),
 ]
 
 # Servir archivos media en desarrollo

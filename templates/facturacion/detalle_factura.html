@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Factura {{ factura.numero_factura }}{% endblock %}
+{% block content %}
+<div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">{{ factura.numero_factura }}</h1>
+            <p class="mt-2 text-sm text-gray-600">{{ factura.cliente.get_nombre_completo }}</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{% url 'facturacion:listar' %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">Volver</a>
+            {% if not factura.esta_pagada and perms.facturacion.change_factura %}
+            <a href="{% url 'facturacion:registrar_pago' factura.pk %}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Registrar Pago</a>
+            {% endif %}
+            {% if perms.facturacion.change_factura %}
+            <a href="{% url 'facturacion:editar' factura.pk %}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Editar</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Estado de la Factura</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><p class="text-sm text-gray-600">Estado</p><span class="mt-1 px-3 py-1 inline-flex text-sm font-semibold rounded-full {{ factura.get_estado_badge_class }}">{{ factura.get_estado_display }}</span></div>
+                    <div><p class="text-sm text-gray-600">Fecha Emisión</p><p class="mt-1 font-semibold">{{ factura.fecha_emision|date:"d/m/Y" }}</p></div>
+                    <div><p class="text-sm text-gray-600">Fecha Vencimiento</p><p class="mt-1 font-semibold">{{ factura.fecha_vencimiento|date:"d/m/Y" }}</p></div>
+                    <div><p class="text-sm text-gray-600">Días para Vencimiento</p><p class="mt-1 font-semibold {% if factura.dias_para_vencimiento < 0 %}text-red-600{% endif %}">{{ factura.dias_para_vencimiento }} días</p></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Líneas de Factura</h2>
+                <table class="min-w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Descripción</th>
+                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Cant.</th>
+                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Precio</th>
+                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Desc.</th>
+                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for linea in lineas %}
+                        <tr class="border-t">
+                            <td class="px-4 py-2 text-sm">{{ linea.descripcion }}</td>
+                            <td class="px-4 py-2 text-sm text-right">{{ linea.cantidad }}</td>
+                            <td class="px-4 py-2 text-sm text-right">€{{ linea.precio_unitario }}</td>
+                            <td class="px-4 py-2 text-sm text-right">{{ linea.descuento }}%</td>
+                            <td class="px-4 py-2 text-sm text-right font-semibold">€{{ linea.total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Totales</h2>
+                <div class="space-y-2">
+                    <div class="flex justify-between"><span class="text-gray-600">Subtotal:</span><span class="font-semibold">€{{ factura.subtotal }}</span></div>
+                    <div class="flex justify-between"><span class="text-gray-600">IVA:</span><span class="font-semibold">€{{ factura.iva_monto }}</span></div>
+                    <div class="flex justify-between text-lg border-t pt-2"><span class="font-bold">TOTAL:</span><span class="font-bold text-blue-600">€{{ factura.total }}</span></div>
+                    <div class="flex justify-between text-lg border-t pt-2"><span class="font-bold">PAGADO:</span><span class="font-bold text-green-600">€{{ factura.monto_pagado }}</span></div>
+                    <div class="flex justify-between text-lg border-t pt-2"><span class="font-bold">PENDIENTE:</span><span class="font-bold text-red-600">€{{ factura.saldo_pendiente }}</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Cliente</h2>
+                <div class="space-y-2">
+                    <div><p class="text-sm text-gray-600">Nombre</p><a href="{% url 'clientes:detalle' factura.cliente.pk %}" class="font-semibold text-blue-600 hover:text-blue-800">{{ factura.cliente.get_nombre_completo }}</a></div>
+                    <div><p class="text-sm text-gray-600">Email</p><p class="font-semibold">{{ factura.cliente.email }}</p></div>
+                    <div><p class="text-sm text-gray-600">Teléfono</p><p class="font-semibold">{{ factura.cliente.telefono }}</p></div>
+                </div>
+            </div>
+
+            {% if factura.orden_trabajo %}
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Orden de Trabajo</h2>
+                <a href="{% url 'ordenes:detalle' factura.orden_trabajo.pk %}" class="font-semibold text-blue-600 hover:text-blue-800">{{ factura.orden_trabajo.numero_orden }}</a>
+            </div>
+            {% endif %}
+
+            {% if factura.metodo_pago %}
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Pago</h2>
+                <div class="space-y-2">
+                    <div><p class="text-sm text-gray-600">Método</p><p class="font-semibold">{{ factura.get_metodo_pago_display }}</p></div>
+                    {% if factura.fecha_pago %}
+                    <div><p class="text-sm text-gray-600">Fecha Pago</p><p class="font-semibold">{{ factura.fecha_pago|date:"d/m/Y" }}</p></div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

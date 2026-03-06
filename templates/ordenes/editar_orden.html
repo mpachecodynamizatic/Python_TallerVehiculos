@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Orden #{{ object.numero_orden }}{% endblock %}
+
+{% block content %}
+<div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Editar Orden #{{ object.numero_orden }}</h1>
+        <p class="mt-2 text-sm text-gray-600">Modifica los datos de la orden de trabajo.</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for field in form %}
+                <div {% if field.name == 'descripcion_problema' or field.name == 'diagnostico' or field.name == 'trabajos_realizados' or field.name == 'observaciones' %}class="md:col-span-2"{% endif %}>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ field.label }} {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ field.errors.0 }}</p>
+                    {% endif %}
+                    {% if field.help_text %}
+                        <p class="mt-1 text-xs text-gray-500">{{ field.help_text }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <ul class="list-disc list-inside text-sm text-red-600">
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="mt-6 flex justify-end gap-3">
+                <a href="{% url 'ordenes:detalle' object.pk %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-200">
+                    Cancelar
+                </a>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
+                    Actualizar Orden
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+# Control de versiones
+.git
+.gitignore
+.gitattributes
+
+# Entornos virtuales
+.venv
+venv
+env
+ENV
+
+# Python cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Base de datos local
+db.sqlite3
+*.db
+
+# Archivos de media y staticfiles (se generan en el contenedor)
+media/
+staticfiles/
+
+# Variables de entorno (nunca subir al contenedor)
+.env
+*.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Scripts de desarrollo (Windows)
+*.bat
+run.sh
+
+# Documentación
+docs/
+*.md
+!README.md
+
+# Tests
+tests/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backup
+backup_flask/
+
+# Otros
+image/
+scripts/

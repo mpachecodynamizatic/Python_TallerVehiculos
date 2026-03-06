@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Registrar Pago{% endblock %}
+{% block content %}
+<div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Registrar Pago</h1>
+
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Información de la Factura</h3>
+        <div class="grid grid-cols-3 gap-4">
+            <div><p class="text-sm text-gray-600">Número</p><p class="font-semibold">{{ factura.numero_factura }}</p></div>
+            <div><p class="text-sm text-gray-600">Cliente</p><p class="font-semibold">{{ factura.cliente.get_nombre_completo }}</p></div>
+            <div><p class="text-sm text-gray-600">Fecha Emisión</p><p class="font-semibold">{{ factura.fecha_emision|date:"d/m/Y" }}</p></div>
+            <div><p class="text-sm text-gray-600">Total</p><p class="font-semibold text-lg">€{{ factura.total }}</p></div>
+            <div><p class="text-sm text-gray-600">Ya Pagado</p><p class="font-semibold text-lg text-green-600">€{{ factura.monto_pagado }}</p></div>
+            <div><p class="text-sm text-gray-600">Pendiente</p><p class="font-semibold text-lg text-red-600">€{{ factura.saldo_pendiente }}</p></div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold mb-4">Registrar Pago</h3>
+        <div class="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400">
+            <p class="text-sm text-blue-700">Al confirmar, se registrará el pago y se actualizará el estado de la factura automáticamente.</p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                {% for field in form %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ field.label }} <span class="text-red-500">*</span></label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ field.errors.0 }}</p>
+                    {% endif %}
+                    {% if field.help_text %}
+                        <p class="mt-1 text-sm text-gray-500">{{ field.help_text }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="flex justify-end gap-3">
+                <a href="{% url 'facturacion:detalle' factura.pk %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">Cancelar</a>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Confirmar Pago</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

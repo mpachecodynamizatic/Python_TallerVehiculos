@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}Orden #{{ orden.numero_orden }}{% endblock %}
+
+{% block content %}
+<div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Orden #{{ orden.numero_orden }}</h1>
+            <p class="mt-2 text-sm text-gray-600">{{ orden.cliente.get_nombre_completo }} - {{ orden.vehiculo.marca }} {{ orden.vehiculo.modelo }}</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{% url 'ordenes:listar' %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-200">
+                Volver
+            </a>
+            {% if orden.puede_editar %}
+            <a href="{% url 'ordenes:editar' orden.pk %}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
+                Editar
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Panel Principal -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Estado e Información -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Estado de la Orden</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Estado</p>
+                        <span class="mt-1 px-3 py-1 inline-flex text-sm font-semibold rounded-full {{ orden.get_estado_badge_class }}">{{ orden.get_estado_display }}</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Prioridad</p>
+                        <span class="mt-1 px-3 py-1 inline-flex text-sm font-semibold rounded-full {{ orden.get_prioridad_badge_class }}">{{ orden.get_prioridad_display }}</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Fecha Apertura</p>
+                        <p class="mt-1 font-semibold">{{ orden.fecha_apertura|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Kilómetros</p>
+                        <p class="mt-1 font-semibold">{{ orden.kilometros_ingreso|floatformat:0 }} km</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Problema Reportado</h2>
+                <p class="text-gray-700 whitespace-pre-wrap">{{ orden.descripcion_problema }}</p>
+            </div>
+
+            <!-- Líneas de Trabajo -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Mano de Obra</h2>
+                <table class="min-w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Descripción</th>
+                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Horas</th>
+                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">€/Hora</th>
+                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for linea in orden.lineas_trabajo.all %}
+                        <tr class="border-t">
+                            <td class="px-4 py-2 text-sm">{{ linea.descripcion }}</td>
+                            <td class="px-4 py-2 text-sm text-right">{{ linea.horas }}</td>
+                            <td class="px-4 py-2 text-sm text-right">€{{ linea.precio_hora }}</td>
+                            <td class="px-4 py-2 text-sm text-right font-semibold">€{{ linea.total }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="px-4 py-2 text-center text-gray-500 text-sm">No hay líneas de trabajo</td></tr>
+                        {% endfor %}
+                        <tr class="border-t bg-gray-50 font-semibold">
+                            <td colspan="3" class="px-4 py-2 text-right">Subtotal Mano de Obra:</td>
+                            <td class="px-4 py-2 text-right">€{{ orden.total_mano_obra }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Líneas de Repuestos -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Repuestos</h2>
+                <table class="min-w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Descripción</th>
+                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Cant.</th>
+                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Precio</th>
+                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Desc.</th>
+                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for linea in orden.lineas_repuesto.all %}
+                        <tr class="border-t">
+                            <td class="px-4 py-2 text-sm">{{ linea.descripcion }}</td>
+                            <td class="px-4 py-2 text-sm text-right">{{ linea.cantidad }}</td>
+                            <td class="px-4 py-2 text-sm text-right">€{{ linea.precio_unitario }}</td>
+                            <td class="px-4 py-2 text-sm text-right">{{ linea.descuento }}%</td>
+                            <td class="px-4 py-2 text-sm text-right font-semibold">€{{ linea.total }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="px-4 py-2 text-center text-gray-500 text-sm">No hay repuestos</td></tr>
+                        {% endfor %}
+                        <tr class="border-t bg-gray-50 font-semibold">
+                            <td colspan="4" class="px-4 py-2 text-right">Subtotal Repuestos:</td>
+                            <td class="px-4 py-2 text-right">€{{ orden.total_repuestos }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Totales -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Totales</h2>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Subtotal:</span>
+                        <span class="font-semibold">€{{ orden.subtotal }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">IVA (21%):</span>
+                        <span class="font-semibold">€{{ orden.iva_monto }}</span>
+                    </div>
+                    <div class="flex justify-between text-lg border-t pt-2">
+                        <span class="font-bold">TOTAL:</span>
+                        <span class="font-bold text-blue-600">€{{ orden.total }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Lateral -->
+        <div class="space-y-6">
+            <!-- Cliente -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Cliente</h2>
+                <div class="space-y-2">
+                    <div>
+                        <p class="text-sm text-gray-600">Nombre</p>
+                        <a href="{% url 'clientes:detalle' orden.cliente.pk %}" class="font-semibold text-blue-600 hover:text-blue-800">{{ orden.cliente.get_nombre_completo }}</a>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Teléfono</p>
+                        <p class="font-semibold">{{ orden.cliente.telefono }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehículo -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Vehículo</h2>
+                <div class="space-y-2">
+                    <div>
+                        <p class="text-sm text-gray-600">Vehículo</p>
+                        <a href="{% url 'vehiculos:detalle' orden.vehiculo.pk %}" class="font-semibold text-blue-600 hover:text-blue-800">{{ orden.vehiculo.marca }} {{ orden.vehiculo.modelo }}</a>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Matrícula</p>
+                        <p class="font-semibold">{{ orden.vehiculo.matricula }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mecánico -->
+            {% if orden.mecanico_asignado %}
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Mecánico</h2>
+                <p class="font-semibold">{{ orden.mecanico_asignado.get_full_name }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

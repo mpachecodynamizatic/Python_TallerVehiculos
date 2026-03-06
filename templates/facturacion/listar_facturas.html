@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Facturas{% endblock %}
+{% block content %}
+<div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Gestión de Facturas</h1>
+        {% if perms.facturacion.add_factura %}
+        <a href="{% url 'facturacion:crear' %}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">+ Nueva Factura</a>
+        {% endif %}
+    </div>
+
+    <!-- Filtros -->
+    <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <input type="text" name="busqueda" value="{{ request.GET.busqueda }}" placeholder="Buscar..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+            <select name="estado" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <option value="">Todos los estados</option>
+                {% for value, label in estados %}
+                <option value="{{ value }}" {% if request.GET.estado == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <div class="flex items-center">
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="vencidas" value="1" {% if request.GET.vencidas %}checked{% endif %} class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <span class="text-sm text-gray-700">Solo Vencidas</span>
+                </label>
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Filtrar</button>
+                <a href="{% url 'facturacion:listar' %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">Limpiar</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="min-w-full">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Número</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha Emisión</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vencimiento</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Estado</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Pendiente</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for factura in facturas %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm font-medium"><a href="{% url 'facturacion:detalle' factura.pk %}" class="text-blue-600 hover:text-blue-800">{{ factura.numero_factura }}</a></td>
+                    <td class="px-6 py-4 text-sm">{{ factura.cliente.get_nombre_completo }}</td>
+                    <td class="px-6 py-4 text-sm">{{ factura.fecha_emision|date:"d/m/Y" }}</td>
+                    <td class="px-6 py-4 text-sm">{{ factura.fecha_vencimiento|date:"d/m/Y" }}</td>
+                    <td class="px-6 py-4 text-center"><span class="px-2 text-xs font-semibold rounded-full {{ factura.get_estado_badge_class }}">{{ factura.get_estado_display }}</span></td>
+                    <td class="px-6 py-4 text-sm text-right font-semibold">€{{ factura.total }}</td>
+                    <td class="px-6 py-4 text-sm text-right text-red-600 font-semibold">€{{ factura.saldo_pendiente }}</td>
+                    <td class="px-6 py-4 text-center text-sm">
+                        <a href="{% url 'facturacion:detalle' factura.pk %}" class="text-blue-600 hover:text-blue-900 mr-3">Ver</a>
+                        {% if perms.facturacion.change_factura %}
+                        <a href="{% url 'facturacion:editar' factura.pk %}" class="text-indigo-600 hover:text-indigo-900">Editar</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">No se encontraron facturas</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

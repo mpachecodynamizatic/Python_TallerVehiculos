@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ repuesto.nombre }}{% endblock %}
+
+{% block content %}
+<div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">{{ repuesto.nombre }}</h1>
+            <p class="mt-2 text-sm text-gray-600">{{ repuesto.codigo }} - {{ repuesto.categoria.nombre }}</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{% url 'inventario:listar' %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-200">
+                Volver
+            </a>
+            {% if perms.inventario.change_repuesto %}
+            <a href="{% url 'inventario:editar' repuesto.pk %}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
+                Editar
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Panel Principal -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Información General -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Información General</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Código</p>
+                        <p class="mt-1 font-semibold">{{ repuesto.codigo }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Categoría</p>
+                        <p class="mt-1 font-semibold">{{ repuesto.categoria.nombre }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Marca</p>
+                        <p class="mt-1 font-semibold">{{ repuesto.marca|default:"-" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Ubicación</p>
+                        <p class="mt-1 font-semibold">{{ repuesto.ubicacion_almacen|default:"-" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Estado</p>
+                        {% if repuesto.activo %}
+                        <span class="mt-1 px-3 py-1 inline-flex text-sm font-semibold rounded-full bg-green-100 text-green-800">Activo</span>
+                        {% else %}
+                        <span class="mt-1 px-3 py-1 inline-flex text-sm font-semibold rounded-full bg-red-100 text-red-800">Inactivo</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if repuesto.descripcion %}
+                <div class="mt-4">
+                    <p class="text-sm text-gray-600">Descripción</p>
+                    <p class="mt-1 text-gray-700">{{ repuesto.descripcion }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Stock -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Stock</h2>
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Stock Actual</p>
+                        <p class="mt-1 text-2xl font-bold text-gray-900">{{ repuesto.stock_actual }}</p>
+                        <span class="mt-2 px-2 py-1 text-xs font-semibold rounded-full {{ repuesto.get_nivel_stock_class }}">
+                            {% if repuesto.esta_sin_stock %}Sin Stock{% elif repuesto.esta_bajo_stock %}Stock Bajo{% else %}Stock OK{% endif %}
+                        </span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Stock Mínimo</p>
+                        <p class="mt-1 text-2xl font-bold text-gray-900">{{ repuesto.stock_minimo }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Stock Máximo</p>
+                        <p class="mt-1 text-2xl font-bold text-gray-900">{{ repuesto.stock_maximo|default:"-" }}</p>
+                    </div>
+                </div>
+                {% if repuesto.stock_maximo %}
+                <div class="mt-4">
+                    <div class="flex justify-between text-sm text-gray-600 mb-1">
+                        <span>Nivel de Stock</span>
+                        <span>{{ repuesto.porcentaje_stock|floatformat:0 }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-600 h-2 rounded-full" style="width: {{ repuesto.porcentaje_stock }}%"></div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Precios -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Precios e IVA</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Precio de Compra</p>
+                        <p class="mt-1 text-xl font-bold text-gray-900">€{{ repuesto.precio_compra }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Precio de Venta (sin IVA)</p>
+                        <p class="mt-1 text-xl font-bold text-gray-900">€{{ repuesto.precio_venta }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">IVA</p>
+                        <p class="mt-1 text-xl font-bold text-gray-900">{{ repuesto.iva }}%</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Precio con IVA</p>
+                        <p class="mt-1 text-xl font-bold text-blue-600">€{{ repuesto.precio_venta_con_iva|floatformat:2 }}</p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t">
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Margen de Beneficio:</span>
+                        <span class="font-bold text-green-600">{{ repuesto.margen_beneficio|floatformat:1 }}%</span>
+                    </div>
+                    <div class="flex justify-between mt-2">
+                        <span class="text-sm text-gray-600">Valor del Stock:</span>
+                        <span class="font-bold text-gray-900">€{{ repuesto.valor_stock|floatformat:2 }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Movimientos Recientes -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Movimientos Recientes</h2>
+                {% if movimientos %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Fecha</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Tipo</th>
+                                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Cantidad</th>
+                                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Stock Anterior</th>
+                                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">Stock Posterior</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Usuario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mov in movimientos %}
+                            <tr class="border-t">
+                                <td class="px-4 py-2 text-sm">{{ mov.fecha|date:"d/m/Y H:i" }}</td>
+                                <td class="px-4 py-2">
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full {{ mov.get_tipo_badge_class }}">
+                                        {{ mov.get_tipo_display }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-2 text-sm text-right">{{ mov.cantidad }}</td>
+                                <td class="px-4 py-2 text-sm text-right">{{ mov.stock_anterior }}</td>
+                                <td class="px-4 py-2 text-sm text-right font-semibold">{{ mov.stock_posterior }}</td>
+                                <td class="px-4 py-2 text-sm">{{ mov.usuario.get_full_name }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-center text-gray-500">No hay movimientos registrados</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Panel Lateral -->
+        <div class="space-y-6">
+            <!-- Foto -->
+            {% if repuesto.foto %}
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Foto</h2>
+                <img src="{{ repuesto.foto.url }}" alt="{{ repuesto.nombre }}" class="w-full rounded-lg">
+            </div>
+            {% endif %}
+
+            <!-- Auditoría -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Auditoría</h2>
+                <div class="space-y-2">
+                    <div>
+                        <p class="text-sm text-gray-600">Fecha de Creación</p>
+                        <p class="font-semibold">{{ repuesto.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Última Modificación</p>
+                        <p class="font-semibold">{{ repuesto.fecha_modificacion|date:"d/m/Y H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
