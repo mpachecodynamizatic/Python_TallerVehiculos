@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle Cita #{{ cita.pk }}{% endblock %}
+
+{% block content %}
+<div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Cita #{{ cita.pk }}</h1>
+            <p class="mt-2 text-sm text-gray-600">Detalles completos de la cita de servicio.</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{% url 'citas:listar' %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-200">
+                Volver al Listado
+            </a>
+            <a href="{% url 'citas:editar' cita.pk %}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
+                Editar Cita
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Información Principal -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Estado y Fechas -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Estado y Programación
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Estado Actual</p>
+                        <p class="mt-1">
+                            <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full {{ cita.get_estado_badge_class }}">
+                                {{ cita.get_estado_display }}
+                            </span>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Fecha y Hora</p>
+                        <p class="mt-1 font-semibold text-gray-900">{{ cita.fecha_hora|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Duración Estimada</p>
+                        <p class="mt-1 font-semibold text-gray-900">{{ cita.duracion_formato }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Hora de Finalización</p>
+                        <p class="mt-1 font-semibold text-gray-900">{{ cita.hora_fin|date:"H:i" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Tipo de Servicio</p>
+                        <p class="mt-1 font-semibold text-gray-900">{{ cita.get_tipo_servicio_display }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Mecánico Asignado</p>
+                        <p class="mt-1 font-semibold text-gray-900">
+                            {% if cita.mecanico_asignado %}
+                                {{ cita.mecanico_asignado.get_full_name }}
+                            {% else %}
+                                <span class="text-gray-400 italic">Sin asignar</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Alertas -->
+                {% if cita.esta_atrasada %}
+                <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start">
+                    <svg class="w-5 h-5 text-red-600 mt-0.5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                    </svg>
+                    <div>
+                        <p class="text-sm font-medium text-red-800">Cita Atrasada</p>
+                        <p class="text-xs text-red-600 mt-1">Esta cita ya pasó y sigue pendiente.</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if cita.es_hoy %}
+                <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
+                    <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                    <div>
+                        <p class="text-sm font-medium text-blue-800">Cita de Hoy</p>
+                        <p class="text-xs text-blue-600 mt-1">Esta cita está programada para hoy.</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Descripción del Servicio -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Descripción del Servicio
+                </h2>
+                <p class="text-gray-700 whitespace-pre-wrap">{{ cita.descripcion }}</p>
+            </div>
+
+            <!-- Notas Internas -->
+            {% if cita.notas %}
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Notas Internas
+                </h2>
+                <p class="text-gray-700 whitespace-pre-wrap">{{ cita.notas }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Panel Lateral -->
+        <div class="space-y-6">
+            <!-- Información del Cliente -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    Cliente
+                </h2>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-sm text-gray-600">Nombre</p>
+                        <a href="{% url 'clientes:detalle' cita.cliente.pk %}" class="mt-1 font-semibold text-blue-600 hover:text-blue-800">
+                            {{ cita.cliente.get_nombre_completo }}
+                        </a>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">DNI/NIF</p>
+                        <p class="mt-1 font-semibold text-gray-900">{{ cita.cliente.dni }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Teléfono</p>
+                        <p class="mt-1 font-semibold text-gray-900">{{ cita.cliente.telefono }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Email</p>
+                        <p class="mt-1 font-semibold text-gray-900 break-all">{{ cita.cliente.email }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información del Vehículo -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
+                    </svg>
+                    Vehículo
+                </h2>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-sm text-gray-600">Vehículo</p>
+                        <a href="{% url 'vehiculos:detalle' cita.vehiculo.pk %}" class="mt-1 font-semibold text-blue-600 hover:text-blue-800">
+                            {{ cita.vehiculo.marca }} {{ cita.vehiculo.modelo }}
+                        </a>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Matrícula</p>
+                        <p class="mt-1 font-semibold text-gray-900">{{ cita.vehiculo.matricula }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Año</p>
+                        <p class="mt-1 font-semibold text-gray-900">{{ cita.vehiculo.anio }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Combustible</p>
+                        <p class="mt-1 font-semibold text-gray-900">{{ cita.vehiculo.get_tipo_combustible_display }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de Auditoría -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Registro
+                </h2>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-sm text-gray-600">Creada</p>
+                        <p class="mt-1 text-sm text-gray-900">{{ cita.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    {% if cita.usuario_creacion %}
+                    <div>
+                        <p class="text-sm text-gray-600">Creada por</p>
+                        <p class="mt-1 text-sm text-gray-900">{{ cita.usuario_creacion.get_full_name }}</p>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <p class="text-sm text-gray-600">Última modificación</p>
+                        <p class="mt-1 text-sm text-gray-900">{{ cita.fecha_modificacion|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Recordatorio</p>
+                        <p class="mt-1 text-sm text-gray-900">
+                            {% if cita.recordatorio_enviado %}
+                                <span class="text-green-600">✓ Enviado</span>
+                            {% else %}
+                                <span class="text-gray-400">Pendiente</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Acciones</h2>
+                <div class="space-y-3">
+                    <a href="{% url 'citas:editar' cita.pk %}" class="block w-full px-4 py-2 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition duration-200">
+                        Editar Cita
+                    </a>
+                    {% if cita.puede_cancelar %}
+                    <a href="{% url 'citas:eliminar' cita.pk %}" class="block w-full px-4 py-2 bg-red-600 text-white text-center rounded-lg hover:bg-red-700 transition duration-200" onclick="return confirm('¿Está seguro de cancelar/eliminar esta cita?')">
+                        Cancelar Cita
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

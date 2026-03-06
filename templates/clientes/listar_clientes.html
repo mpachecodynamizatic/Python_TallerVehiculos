@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Clientes{% endblock %}
+
+{% block content %}
+<div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Clientes del Taller</h1>
+        <a href="{% url 'clientes:crear' %}"
+           class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Nuevo Cliente
+        </a>
+    </div>
+
+    <!-- Filtros -->
+    <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Filtro por estado -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+                <select name="estado" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">Todos</option>
+                    <option value="activos" {% if estado_filtro == 'activos' %}selected{% endif %}>Activos</option>
+                    <option value="inactivos" {% if estado_filtro == 'inactivos' %}selected{% endif %}>Inactivos</option>
+                </select>
+            </div>
+
+            <!-- Búsqueda -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+                <input type="text" name="busqueda" value="{{ busqueda }}"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                       placeholder="Nombre, DNI, email o teléfono">
+            </div>
+
+            <!-- Botones -->
+            <div class="flex items-end gap-2">
+                <button type="submit" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+                    Filtrar
+                </button>
+                <a href="{% url 'clientes:listar' %}" class="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-200 text-center">
+                    Limpiar
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla de clientes -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <a href="?orden={% if orden == 'dni' %}-{% endif %}dni&direccion={% if orden == 'dni' and direccion != 'desc' %}desc{% else %}asc{% endif %}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}" class="flex items-center hover:text-gray-700">
+                            DNI
+                            {% if orden == 'dni' or orden == '-dni' %}
+                                <span class="ml-1">{% if direccion == 'desc' or orden == '-dni' %}▼{% else %}▲{% endif %}</span>
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <a href="?orden={% if orden == 'apellidos' %}-{% endif %}apellidos&direccion={% if orden == 'apellidos' and direccion != 'desc' %}desc{% else %}asc{% endif %}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}" class="flex items-center hover:text-gray-700">
+                            Cliente
+                            {% if orden == 'apellidos' or orden == '-apellidos' %}
+                                <span class="ml-1">{% if direccion == 'desc' or orden == '-apellidos' %}▼{% else %}▲{% endif %}</span>
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <a href="?orden={% if orden == 'email' %}-{% endif %}email&direccion={% if orden == 'email' and direccion != 'desc' %}desc{% else %}asc{% endif %}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}" class="flex items-center hover:text-gray-700">
+                            Contacto
+                            {% if orden == 'email' or orden == '-email' %}
+                                <span class="ml-1">{% if direccion == 'desc' or orden == '-email' %}▼{% else %}▲{% endif %}</span>
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <a href="?orden={% if orden == 'ciudad' %}-{% endif %}ciudad&direccion={% if orden == 'ciudad' and direccion != 'desc' %}desc{% else %}asc{% endif %}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}" class="flex items-center hover:text-gray-700">
+                            Ubicación
+                            {% if orden == 'ciudad' or orden == '-ciudad' %}
+                                <span class="ml-1">{% if direccion == 'desc' or orden == '-ciudad' %}▼{% else %}▲{% endif %}</span>
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <a href="?orden={% if orden == 'num_vehiculos' %}-{% endif %}num_vehiculos&direccion={% if orden == 'num_vehiculos' and direccion != 'desc' %}desc{% else %}asc{% endif %}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}" class="flex items-center hover:text-gray-700">
+                            Vehículos
+                            {% if orden == 'num_vehiculos' or orden == '-num_vehiculos' %}
+                                <span class="ml-1">{% if direccion == 'desc' or orden == '-num_vehiculos' %}▼{% else %}▲{% endif %}</span>
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for cliente in clientes %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">{{ cliente.dni }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="h-10 w-10 rounded-full bg-green-600 flex items-center justify-center text-white font-medium">
+                                {{ cliente.nombre|first|upper }}{{ cliente.apellidos|first|upper }}
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">{{ cliente.get_nombre_completo }}</div>
+                                <div class="text-sm text-gray-500">Cliente #{{ cliente.pk }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {% if cliente.email %}
+                        <div class="text-sm text-gray-900">{{ cliente.email }}</div>
+                        {% endif %}
+                        <div class="text-sm text-gray-500">{{ cliente.telefono }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {% if cliente.ciudad %}
+                        <div class="text-sm text-gray-900">{{ cliente.ciudad }}</div>
+                        {% endif %}
+                        {% if cliente.codigo_postal %}
+                        <div class="text-sm text-gray-500">CP: {{ cliente.codigo_postal }}</div>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                            {% if cliente.total_vehiculos > 0 %}bg-blue-100 text-blue-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {{ cliente.total_vehiculos }} vehículo{{ cliente.total_vehiculos|pluralize }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {% if cliente.activo %}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            Activo
+                        </span>
+                        {% else %}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                            Inactivo
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div class="flex justify-end gap-2">
+                            <a href="{% url 'clientes:detalle' cliente.pk %}"
+                               class="text-blue-600 hover:text-blue-900" title="Ver detalle">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </a>
+                            <a href="{% url 'clientes:editar' cliente.pk %}"
+                               class="text-indigo-600 hover:text-indigo-900" title="Editar">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </a>
+                            <a href="{% url 'clientes:eliminar' cliente.pk %}"
+                               class="text-red-600 hover:text-red-900" title="Eliminar"
+                               onclick="return confirm('¿Estás seguro de eliminar este cliente?')">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                        No se encontraron clientes.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    {% if is_paginated %}
+    <div class="mt-6 flex justify-center">
+        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}{% if orden %}&orden={{ orden }}{% endif %}{% if direccion %}&direccion={{ direccion }}{% endif %}"
+               class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                Anterior
+            </a>
+            {% endif %}
+
+            <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}{% if orden %}&orden={{ orden }}{% endif %}{% if direccion %}&direccion={{ direccion }}{% endif %}"
+               class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                Siguiente
+            </a>
+            {% endif %}
+        </nav>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

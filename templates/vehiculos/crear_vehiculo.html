@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Nuevo Vehículo{% endblock %}
+
+{% block content %}
+<div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
+    <!-- Encabezado -->
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Crear Nuevo Vehículo</h1>
+        <p class="text-gray-600 mt-2">Complete el formulario para agregar un nuevo vehículo al sistema</p>
+    </div>
+
+    <!-- Formulario -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Errores generales -->
+            {% if form.non_field_errors %}
+            <div class="mb-4 bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <!-- Cliente -->
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Cliente</h2>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ form.cliente.label }} *
+                    </label>
+                    {{ form.cliente }}
+                    {% if form.cliente.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.cliente.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Información del Vehículo -->
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Información del Vehículo</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.marca.label }} *
+                        </label>
+                        {{ form.marca }}
+                        {% if form.marca.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.marca.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.modelo.label }} *
+                        </label>
+                        {{ form.modelo }}
+                        {% if form.modelo.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.modelo.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.anio.label }} *
+                        </label>
+                        {{ form.anio }}
+                        {% if form.anio.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.anio.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Identificación -->
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Identificación</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.matricula.label }} *
+                        </label>
+                        {{ form.matricula }}
+                        {% if form.matricula.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.matricula.errors.0 }}</p>
+                        {% endif %}
+                        <p class="mt-1 text-sm text-gray-500">Ejemplo: 1234ABC</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.bastidor.label }}
+                        </label>
+                        {{ form.bastidor }}
+                        {% if form.bastidor.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.bastidor.errors.0 }}</p>
+                        {% endif %}
+                        <p class="mt-1 text-sm text-gray-500">Número VIN (17 caracteres)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Características -->
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Características</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.tipo_combustible.label }}
+                        </label>
+                        {{ form.tipo_combustible }}
+                        {% if form.tipo_combustible.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.tipo_combustible.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.kilometraje.label }}
+                        </label>
+                        {{ form.kilometraje }}
+                        {% if form.kilometraje.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.kilometraje.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.color.label }}
+                        </label>
+                        {{ form.color }}
+                        {% if form.color.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.color.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multimedia -->
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Multimedia</h2>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ form.foto_vehiculo.label }}
+                    </label>
+                    {{ form.foto_vehiculo }}
+                    {% if form.foto_vehiculo.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.foto_vehiculo.errors.0 }}</p>
+                    {% endif %}
+                    <p class="mt-1 text-sm text-gray-500">Formatos aceptados: JPG, PNG, JPEG (máx. 5MB)</p>
+                </div>
+            </div>
+
+            <!-- Notas -->
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Notas</h2>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ form.notas.label }}
+                    </label>
+                    {{ form.notas }}
+                    {% if form.notas.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.notas.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="flex items-center">
+                    {{ form.activo }}
+                    <label class="ml-2 text-sm text-gray-700">
+                        {{ form.activo.label }}
+                    </label>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex justify-end gap-4 pt-4 border-t">
+                <a href="{% url 'vehiculos:listar' %}"
+                   class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition duration-200">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
+                    Crear Vehículo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

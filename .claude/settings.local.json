@@ -22,7 +22,8 @@
       "Bash(chmod:*)",
       "Bash(.venv/Scripts/activate)",
       "Bash(python:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(grep:*)"
     ]
   }
 }

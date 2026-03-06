@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}Calendario de Citas{% endblock %}
+
+{% block content %}
+<div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Calendario de Citas</h1>
+        <div class="flex gap-3">
+            <a href="{% url 'citas:listar' %}" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                </svg>
+                Ver Listado
+            </a>
+            <a href="{% url 'citas:crear' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Nueva Cita
+            </a>
+        </div>
+    </div>
+
+    <!-- Controles de navegación del calendario -->
+    <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <div class="flex justify-between items-center">
+            <div class="flex gap-4 items-center">
+                <!-- Navegación de mes -->
+                <div class="flex gap-2">
+                    <a href="?mes={{ mes_anterior }}&anio={{ anio_anterior }}{% if mecanico_filtro %}&mecanico={{ mecanico_filtro }}{% endif %}" class="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                        ← Anterior
+                    </a>
+                    <button onclick="window.location.href='?{% if mecanico_filtro %}mecanico={{ mecanico_filtro }}{% endif %}'" class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                        Hoy
+                    </button>
+                    <a href="?mes={{ mes_siguiente }}&anio={{ anio_siguiente }}{% if mecanico_filtro %}&mecanico={{ mecanico_filtro }}{% endif %}" class="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                        Siguiente →
+                    </a>
+                </div>
+
+                <!-- Mes y Año actual -->
+                <h2 class="text-xl font-bold text-gray-800">
+                    {% if mes == 1 %}Enero
+                    {% elif mes == 2 %}Febrero
+                    {% elif mes == 3 %}Marzo
+                    {% elif mes == 4 %}Abril
+                    {% elif mes == 5 %}Mayo
+                    {% elif mes == 6 %}Junio
+                    {% elif mes == 7 %}Julio
+                    {% elif mes == 8 %}Agosto
+                    {% elif mes == 9 %}Septiembre
+                    {% elif mes == 10 %}Octubre
+                    {% elif mes == 11 %}Noviembre
+                    {% elif mes == 12 %}Diciembre
+                    {% endif %}
+                    {{ anio }}
+                </h2>
+            </div>
+
+            <!-- Filtro por mecánico -->
+            <div>
+                <form method="get" class="flex items-center gap-2">
+                    <input type="hidden" name="mes" value="{{ mes }}">
+                    <input type="hidden" name="anio" value="{{ anio }}">
+                    <label class="text-sm text-gray-600">Mecánico:</label>
+                    <select name="mecanico" onchange="this.form.submit()" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="">Todos</option>
+                        {% for mecanico in mecanicos %}
+                        <option value="{{ mecanico.id }}" {% if mecanico_filtro == mecanico.id|stringformat:"s" %}selected{% endif %}>{{ mecanico.get_full_name }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vista de calendario simplificada -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <!-- Encabezados de días -->
+        <div class="grid grid-cols-7 gap-2 mb-4">
+            <div class="text-center font-semibold text-gray-700 py-2">Lunes</div>
+            <div class="text-center font-semibold text-gray-700 py-2">Martes</div>
+            <div class="text-center font-semibold text-gray-700 py-2">Miércoles</div>
+            <div class="text-center font-semibold text-gray-700 py-2">Jueves</div>
+            <div class="text-center font-semibold text-gray-700 py-2">Viernes</div>
+            <div class="text-center font-semibold text-gray-700 py-2">Sábado</div>
+            <div class="text-center font-semibold text-gray-700 py-2">Domingo</div>
+        </div>
+
+        <!-- Grid de días con citas (versión simplificada por limitaciones de Django templates) -->
+        <div class="space-y-4">
+            <p class="text-gray-600 text-center py-8">
+                Vista de calendario detallada disponible próximamente. <br>
+                Por ahora, utiliza la <a href="{% url 'citas:listar' %}" class="text-blue-600 hover:underline">vista de listado</a> para gestionar citas.
+            </p>
+
+            <!-- Lista de citas del mes -->
+            {% if citas %}
+            <div class="mt-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Citas del Mes</h3>
+                <div class="space-y-3">
+                    {% for cita in citas %}
+                    <a href="{% url 'citas:detalle' cita.pk %}" class="block p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-semibold text-gray-900">{{ cita.fecha_hora|date:"d/m/Y H:i" }}</span>
+                                    <span class="px-2 py-0.5 text-xs font-semibold rounded-full {{ cita.get_estado_badge_class }}">
+                                        {{ cita.get_estado_display }}
+                                    </span>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-700">
+                                    <strong>{{ cita.cliente.get_nombre_completo }}</strong> -
+                                    {{ cita.vehiculo.marca }} {{ cita.vehiculo.modelo }} ({{ cita.vehiculo.matricula }})
+                                </p>
+                                <p class="mt-1 text-xs text-gray-500">
+                                    {{ cita.get_tipo_servicio_display }}
+                                    {% if cita.mecanico_asignado %} • {{ cita.mecanico_asignado.get_full_name }}{% endif %}
+                                </p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <div class="mt-6 text-center py-8 bg-gray-50 rounded-lg">
+                <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <p class="text-gray-600">No hay citas programadas para este mes.</p>
+                <a href="{% url 'citas:crear' %}" class="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    Crear Nueva Cita
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Leyenda de estados -->
+    <div class="mt-6 bg-white rounded-lg shadow p-4">
+        <h3 class="text-sm font-semibold text-gray-700 mb-3">Leyenda de Estados</h3>
+        <div class="flex flex-wrap gap-4">
+            <div class="flex items-center gap-2">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pendiente</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Confirmada</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">En Proceso</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completada</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Cancelada</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">No Asistió</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

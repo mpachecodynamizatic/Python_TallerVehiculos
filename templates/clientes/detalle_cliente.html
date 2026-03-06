@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle de Cliente{% endblock %}
+
+{% block content %}
+<div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
+    <div class="mb-6 flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-gray-800">Detalle de Cliente</h1>
+        <a href="{% url 'clientes:listar' %}" class="text-blue-600 hover:text-blue-800">
+            ← Volver al listado
+        </a>
+    </div>
+
+    <!-- Información del Cliente -->
+    <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+        <div class="bg-gradient-to-r from-green-500 to-green-600 p-8">
+            <div class="flex items-center">
+                <div class="h-32 w-32 rounded-full border-4 border-white bg-white flex items-center justify-center">
+                    <span class="text-5xl font-bold text-green-600">{{ cliente.nombre|first|upper }}{{ cliente.apellidos|first|upper }}</span>
+                </div>
+                <div class="ml-6 text-white">
+                    <h2 class="text-3xl font-bold">{{ cliente.get_nombre_completo }}</h2>
+                    <p class="text-green-100 text-lg">DNI: {{ cliente.dni }}</p>
+                    <div class="mt-2 flex gap-2">
+                        {% if cliente.activo %}
+                        <span class="inline-block px-3 py-1 bg-white bg-opacity-20 rounded-full text-sm font-medium">
+                            ✓ Cliente Activo
+                        </span>
+                        {% else %}
+                        <span class="inline-block px-3 py-1 bg-red-500 bg-opacity-50 rounded-full text-sm font-medium">
+                            Cliente Inactivo
+                        </span>
+                        {% endif %}
+                        <span class="inline-block px-3 py-1 bg-white bg-opacity-20 rounded-full text-sm font-medium">
+                            {{ cliente.total_vehiculos }} vehículo{{ cliente.total_vehiculos|pluralize }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <div class="mb-6 flex gap-4">
+                <a href="{% url 'clientes:editar' cliente.pk %}" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-center transition duration-200">
+                    Editar Cliente
+                </a>
+                <a href="{% url 'clientes:eliminar' cliente.pk %}" class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-center transition duration-200">
+                    Eliminar Cliente
+                </a>
+            </div>
+
+            <!-- Información de Contacto -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Información de Contacto</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Correo Electrónico</label>
+                        <p class="text-lg text-gray-900">{{ cliente.email|default:"No especificado" }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Teléfono Principal</label>
+                        <p class="text-lg text-gray-900">{{ cliente.telefono }}</p>
+                    </div>
+                    {% if cliente.telefono_alternativo %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Teléfono Alternativo</label>
+                        <p class="text-lg text-gray-900">{{ cliente.telefono_alternativo }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Dirección -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Dirección</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Dirección Completa</label>
+                        <p class="text-lg text-gray-900">{{ cliente.direccion|default:"No especificada" }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Ciudad</label>
+                        <p class="text-lg text-gray-900">{{ cliente.ciudad|default:"No especificada" }}</p>
+                    </div>
+                    {% if cliente.codigo_postal %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Código Postal</label>
+                        <p class="text-lg text-gray-900">{{ cliente.codigo_postal }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Información Adicional -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Información Adicional</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Fecha de Registro</label>
+                        <p class="text-lg text-gray-900">{{ cliente.fecha_registro|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Última Actualización</label>
+                        <p class="text-lg text-gray-900">{{ cliente.fecha_actualizacion|date:"d/m/Y H:i" }}</p>
+                    </div>
+                </div>
+                {% if cliente.notas %}
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Notas</label>
+                    <p class="text-gray-900 whitespace-pre-line">{{ cliente.notas }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehículos del Cliente -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-semibold text-gray-800">Vehículos Registrados</h3>
+                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 text-sm">
+                    + Agregar Vehículo
+                </a>
+            </div>
+        </div>
+
+        {% if vehiculos %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Matrícula</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marca / Modelo</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Año</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for vehiculo in vehiculos %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">{{ vehiculo.matricula }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ vehiculo.marca }} {{ vehiculo.modelo }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">{{ vehiculo.anio }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {% if vehiculo.activo %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                Activo
+                            </span>
+                            {% else %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                Inactivo
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">Ver</a>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-900">Editar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-8 text-center text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
+            </svg>
+            <p class="mt-2">Este cliente no tiene vehículos registrados</p>
+            <a href="#" class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+                Agregar Primer Vehículo
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

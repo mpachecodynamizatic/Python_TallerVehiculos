@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle de Vehículo{% endblock %}
+
+{% block content %}
+<div style="width: 80%; margin: 0 auto;" class="px-4 py-8">
+    <div class="mb-6 flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-gray-800">Detalle de Vehículo</h1>
+        <a href="{% url 'vehiculos:listar' %}" class="text-blue-600 hover:text-blue-800">
+            ← Volver al listado
+        </a>
+    </div>
+
+    <!-- Información del Vehículo -->
+    <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-8">
+            <div class="flex items-center">
+                <div class="h-32 w-32 rounded-full border-4 border-white bg-white flex items-center justify-center">
+                    {% if vehiculo.foto_vehiculo %}
+                    <img src="{{ vehiculo.foto_vehiculo.url }}" alt="{{ vehiculo.get_nombre_completo }}" class="h-full w-full rounded-full object-cover">
+                    {% else %}
+                    <span class="text-5xl font-bold text-blue-600">{{ vehiculo.marca|first|upper }}{{ vehiculo.modelo|first|upper }}</span>
+                    {% endif %}
+                </div>
+                <div class="ml-6 text-white">
+                    <h2 class="text-3xl font-bold">{{ vehiculo.get_nombre_completo }}</h2>
+                    <p class="text-blue-100 text-lg">Matrícula: {{ vehiculo.matricula }}</p>
+                    <div class="mt-2 flex gap-2">
+                        {% if vehiculo.activo %}
+                        <span class="inline-block px-3 py-1 bg-white bg-opacity-20 rounded-full text-sm font-medium">
+                            ✓ Vehículo Activo
+                        </span>
+                        {% else %}
+                        <span class="inline-block px-3 py-1 bg-red-500 bg-opacity-50 rounded-full text-sm font-medium">
+                            Vehículo Inactivo
+                        </span>
+                        {% endif %}
+                        <span class="inline-block px-3 py-1 bg-white bg-opacity-20 rounded-full text-sm font-medium">
+                            Año {{ vehiculo.anio }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <div class="mb-6 flex gap-4">
+                <a href="{% url 'vehiculos:editar' vehiculo.pk %}" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-center transition duration-200">
+                    Editar Vehículo
+                </a>
+                <a href="{% url 'vehiculos:eliminar' vehiculo.pk %}" class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-center transition duration-200">
+                    Eliminar Vehículo
+                </a>
+            </div>
+
+            <!-- Información del Cliente -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Propietario</h3>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="h-12 w-12 rounded-full bg-green-600 flex items-center justify-center text-white font-medium">
+                                {{ vehiculo.cliente.nombre|first|upper }}{{ vehiculo.cliente.apellidos|first|upper }}
+                            </div>
+                            <div class="ml-4">
+                                <div class="font-medium text-gray-900">{{ vehiculo.cliente.get_nombre_completo }}</div>
+                                <div class="text-sm text-gray-500">{{ vehiculo.cliente.dni }} - {{ vehiculo.cliente.telefono }}</div>
+                                {% if vehiculo.cliente.email %}
+                                <div class="text-sm text-gray-500">{{ vehiculo.cliente.email }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <a href="{% url 'clientes:detalle' vehiculo.cliente.pk %}" class="text-blue-600 hover:text-blue-800 font-medium">
+                            Ver Perfil →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información del Vehículo -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Información del Vehículo</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Marca</label>
+                        <p class="text-lg text-gray-900">{{ vehiculo.marca }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Modelo</label>
+                        <p class="text-lg text-gray-900">{{ vehiculo.modelo }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Año</label>
+                        <p class="text-lg text-gray-900">{{ vehiculo.anio }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Identificación -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Identificación</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Matrícula</label>
+                        <p class="text-lg text-gray-900 font-mono">{{ vehiculo.matricula }}</p>
+                    </div>
+                    {% if vehiculo.bastidor %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Número de Bastidor (VIN)</label>
+                        <p class="text-lg text-gray-900 font-mono">{{ vehiculo.bastidor }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Características -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Características</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {% if vehiculo.tipo_combustible %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Tipo de Combustible</label>
+                        <p class="text-lg text-gray-900">{{ vehiculo.get_tipo_combustible_display }}</p>
+                    </div>
+                    {% endif %}
+                    {% if vehiculo.kilometraje %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Kilometraje</label>
+                        <p class="text-lg text-gray-900">{{ vehiculo.kilometraje|floatformat:0 }} km</p>
+                    </div>
+                    {% endif %}
+                    {% if vehiculo.color %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Color</label>
+                        <p class="text-lg text-gray-900">{{ vehiculo.color }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Información Adicional -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Información Adicional</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Fecha de Registro</label>
+                        <p class="text-lg text-gray-900">{{ vehiculo.fecha_registro|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Última Actualización</label>
+                        <p class="text-lg text-gray-900">{{ vehiculo.fecha_actualizacion|date:"d/m/Y H:i" }}</p>
+                    </div>
+                </div>
+                {% if vehiculo.notas %}
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Notas</label>
+                    <p class="text-gray-900 whitespace-pre-line">{{ vehiculo.notas }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Órdenes de Trabajo del Vehículo -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-semibold text-gray-800">Órdenes de Trabajo</h3>
+                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 text-sm">
+                    + Nueva Orden
+                </a>
+            </div>
+        </div>
+
+        <div class="p-8 text-center text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+            </svg>
+            <p class="mt-2">Este vehículo no tiene órdenes de trabajo registradas</p>
+            <a href="#" class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+                Crear Primera Orden
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

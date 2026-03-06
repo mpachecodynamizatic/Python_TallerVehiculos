@@ -31,6 +31,15 @@ urlpatterns = [
 
     # Gestión de usuarios
     path('usuarios/', include('apps.usuarios.urls')),
+
+    # Gestión de clientes
+    path('clientes/', include('apps.clientes.urls')),
+
+    # Gestión de vehículos
+    path('vehiculos/', include('apps.vehiculos.urls')),
+
+    # Gestión de citas
+    path('citas/', include('apps.citas.urls')),
 ]
 
 # Servir archivos media en desarrollo

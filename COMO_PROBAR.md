@@ -17,7 +17,7 @@ Guía rápida para probar que todo funciona correctamente.
 Este script verificará automáticamente:
 - ✅ Python instalado
 - ✅ Django instalado
-- ✅ Todas las dependencias
+- ✅ Todas las dependencias![1772783450274](image/COMO_PROBAR/1772783450274.png)
 - ✅ Configuración correcta
 - ✅ Migraciones aplicadas
 - ✅ Estructura de archivos
