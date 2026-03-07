@@ -57,7 +57,8 @@ COPY . .
 RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
 
 # Carpetas de datos con permisos correctos
-RUN mkdir -p staticfiles media && chown -R appuser:appgroup staticfiles media
+RUN mkdir -p staticfiles media static logs && \
+    chown -R appuser:appgroup /app
 
 # Script de arranque
 COPY docker/entrypoint.sh /entrypoint.sh
