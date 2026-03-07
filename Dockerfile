@@ -8,10 +8,9 @@ FROM python:3.12-slim AS builder
 
 WORKDIR /app
 
-# Dependencias del sistema necesarias para Pillow, psycopg2, WeasyPrint
+# Dependencias del sistema necesarias para Pillow y WeasyPrint
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    libpq-dev \
     libcairo2 \
     libpango-1.0-0 \
     libpangocairo-1.0-0 \
@@ -38,7 +37,6 @@ WORKDIR /app
 
 # Librerías de runtime (sin build-essential)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq5 \
     libcairo2 \
     libpango-1.0-0 \
     libpangocairo-1.0-0 \

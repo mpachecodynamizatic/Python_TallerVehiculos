@@ -4,9 +4,6 @@
 # Production server
 gunicorn>=21.0.0
 
-# Database
-psycopg2-binary>=2.9.0
-
 # Static files
 whitenoise[brotli]>=6.5.0
 
@@ -14,15 +11,11 @@ whitenoise[brotli]>=6.5.0
 WeasyPrint>=60.0.0
 reportlab>=4.0.0
 
-# Monitoring & Error tracking
-sentry-sdk>=1.40.0
+# Monitoring & Error tracking (opcional)
+# sentry-sdk>=1.40.0
 
 # Security
 django-cors-headers>=4.3.0
 
-# Email
-django-ses>=3.5.0
-
-# Caching
-django-redis>=5.4.0
-redis>=5.0.0
+# Email (opcional)
+# django-ses>=3.5.0
