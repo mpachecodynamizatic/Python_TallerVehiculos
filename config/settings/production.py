@@ -15,10 +15,11 @@ CSRF_TRUSTED_ORIGINS = [o.strip() for o in os.getenv('CSRF_TRUSTED_ORIGINS', '')
 
 # Database
 # SQLite — simple y sin dependencias externas
+# La base de datos se guarda en /app/data/ para tener permisos correctos
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / os.getenv('DB_NAME', 'db.sqlite3'),
+        'NAME': BASE_DIR / 'data' / os.getenv('DB_NAME', 'db.sqlite3'),
     }
 }
 

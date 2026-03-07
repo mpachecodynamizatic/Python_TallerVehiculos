@@ -69,10 +69,12 @@ Para mantener la base de datos SQLite y los archivos media entre deployments:
 2. Añade los siguientes volúmenes:
 
 ```
-/app/db.sqlite3       →  /data/db.sqlite3
-/app/media            →  /data/media
-/app/logs             →  /data/logs
+/app/data             →  /data
+/app/media            →  /media
+/app/logs             →  /logs
 ```
+
+**Nota**: La base de datos se guarda en `/app/data/db.sqlite3` para tener permisos correctos.
 
 ### 5. Dominio y SSL
 
