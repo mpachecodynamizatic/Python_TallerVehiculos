@@ -26,8 +26,11 @@ DATABASES = {
 # Security settings
 # SECURE_SSL_REDIRECT=False si Coolify/proxy maneja el SSL (recomendado)
 SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False') == 'True'
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+
+# Solo usar cookies seguras si HTTPS está habilitado
+USE_HTTPS = os.getenv('USE_HTTPS', 'False') == 'True'
+SESSION_COOKIE_SECURE = USE_HTTPS
+CSRF_COOKIE_SECURE = USE_HTTPS
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
