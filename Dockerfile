@@ -32,7 +32,7 @@ FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     DJANGO_SETTINGS_MODULE=config.settings.production \
-    PORT=5000
+    PORT=5004
 
 WORKDIR /app
 
@@ -65,6 +65,6 @@ RUN chmod +x /entrypoint.sh
 
 USER appuser
 
-EXPOSE 5000
+EXPOSE 5004
 
 ENTRYPOINT ["/entrypoint.sh"]
