@@ -3,19 +3,16 @@
 Este archivo es leido automaticamente por Claude al comenzar cualquier sesion.
 
 ## Que es este proyecto?
-> [Describe el proposito del proyecto en 2-3 oraciones]
+
+Sistema integral de gestión para talleres mecánicos que permite administrar clientes, vehículos, citas, órdenes de trabajo, inventario de repuestos, compras y facturación. Desarrollado con Django 6.0 y diseñado para optimizar la operación diaria de un taller automotriz.
 
 ## Stack Tecnologico
-- **Backend**: Python + FastAPI/Flask (elige uno) + SQLAlchemy
-- **Frontend**: [React/HTML/Vue - por definir]
-- **Base de datos**: SQLite (dev) / PostgreSQL (prod)
-- **Testing**: pytest
-
-## Opciones de Framework
-El proyecto incluye configuracion para:
-- **FastAPI**: src/main.py (moderno, async, docs automaticas)
-- **Flask**: src/app_flask.py (clasico, simple, probado)
-Elige el que mejor se adapte a tus necesidades.
+- **Backend**: Python 3.11+ + Django 6.0
+- **Frontend**: HTML5 + CSS3 + JavaScript (HTMX + Alpine.js)
+- **Base de datos**: SQLite (dev) / Compatible PostgreSQL (prod)
+- **Servidor**: Gunicorn (producción)
+- **Deployment**: Docker, compatible con Coolify
+- **Testing**: pytest + Django TestCase
 
 ## Convenciones del Equipo
 - Commits en espanol, formato: tipo(scope): descripcion
@@ -34,16 +31,47 @@ Consulta la carpeta .claude/skills/ para guias detalladas:
 - programming.md   : Programacion general y codigo limpio
 
 ## Decisiones de Arquitectura
-> [Registra aqui las decisiones importantes y su justificacion]
+
+### 1. Framework: Django 6.0
+**Razón**: Django proporciona un ORM robusto, panel de administración automático, sistema de autenticación integrado y es ideal para aplicaciones CRUD complejas como un sistema de gestión de taller.
+
+### 2. Base de Datos: SQLite (desarrollo) / Compatible PostgreSQL (producción)
+**Razón**: SQLite es simple para desarrollo y despliegue sin dependencias. La estructura está lista para migrar a PostgreSQL en producción si se necesita escalabilidad.
+
+### 3. Carga Automática de Datos de Ejemplo ⭐ NUEVO
+**Implementación**: El sistema detecta automáticamente si la base de datos está vacía al iniciar (verificando la existencia de usuarios) y ejecuta el comando `seed_data` automáticamente.
+
+**Archivo**: `apps/core/apps.py` - método `ready()`
+
+**Características**:
+- Se ejecuta solo una vez al iniciar Django
+- No interfiere con migraciones o comandos de management
+- Evita recargas en modo desarrollo
+- Crea usuarios, clientes, vehículos, citas, órdenes, inventario, facturas, etc.
+
+**Credenciales por defecto**:
+- Admin: `admin` / `Admin1234!`
+- Recepcionista: `recepcion` / `Admin1234!`
+- Mecánicos: `mecanico1`, `mecanico2` / `Admin1234!`
+
+### 4. Estructura Multi-App
+**Razón**: Separación clara de responsabilidades. Cada módulo (clientes, vehículos, citas, etc.) es una app Django independiente, facilitando el mantenimiento y la escalabilidad.
+
+### 5. Sistema de Roles Personalizado
+**Razón**: Modelo de usuario extendido (`apps.usuarios.Usuario`) con roles específicos del dominio (ADMIN, RECEPCIONISTA, MECANICO) en lugar de usar solo grupos de Django.
 
 ## Estado Actual del Proyecto
-> [Actualiza esto con el progreso]
-- [ ] Setup inicial
-- [ ] Modelos de base de datos
-- [ ] API endpoints basicos
-- [ ] Frontend base
-- [ ] Tests
-- [ ] Deploy
+> Última actualización: 2026-03-10
+
+- [x] Setup inicial
+- [x] Modelos de base de datos (todas las apps creadas)
+- [x] Panel de administración completo
+- [x] Frontend base con templates
+- [x] Sistema de autenticación y roles
+- [x] **Carga automática de datos de ejemplo** (al desplegar con BD vacía)
+- [x] Deploy con Docker configurado
+- [ ] Tests unitarios y de integración
+- [ ] Documentación de API completa
 
 ## Reglas Específicas
 - Siempre usar español para nombres de variables y comentarios

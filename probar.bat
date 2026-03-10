@@ -92,6 +92,6 @@ echo   O: python manage.py runserver
 echo.
 echo Luego abre: http://localhost:8000/admin
 echo   Usuario: admin
-echo   Password: admin123
+echo   Password: Admin1234!
 echo.
 pause

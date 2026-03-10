@@ -1,98 +1,255 @@
-﻿# TallerVehiculos
+# TallerVehiculos 🚗
 
-## Descripcion
-Proyecto Python con FastAPI y Flask (elige el que prefieras)
+Sistema integral de gestión para talleres mecánicos desarrollado con Django 6.0.
 
-## Requisitos
+## 🎯 Características
+
+- **Gestión de Clientes**: Registro y seguimiento de clientes
+- **Gestión de Vehículos**: Control de vehículos y su historial
+- **Citas**: Sistema de programación de citas y servicios
+- **Órdenes de Trabajo**: Seguimiento completo de trabajos realizados
+- **Inventario**: Control de repuestos y materiales
+- **Facturación**: Generación de facturas y control de pagos
+- **Compras**: Gestión de proveedores y órdenes de compra
+- **Dashboard**: Panel de control con métricas en tiempo real
+- **Multi-usuario**: Sistema de roles (Admin, Recepcionista, Mecánico)
+
+## 📋 Requisitos
+
 - Python 3.11+
 - pip
 - SQLite (incluido en Python)
 
-## Instalacion rapida
+## 🚀 Instalación Rápida
+
+### Windows
 
 ```bash
+# Clonar el repositorio
+git clone <url-del-repositorio>
+cd Python_TallerVehiculos
+
 # Crear y activar entorno virtual
 python -m venv .venv
-.venv\Scripts\activate   # Windows
-source .venv/bin/activate # Linux/Mac
+.venv\Scripts\activate
 
 # Instalar dependencias
-pip install -r requirements-dev.txt
+pip install -r requirements\base.txt
 
-# Configurar entorno
-cp .env.example .env
+# Aplicar migraciones
+python manage.py migrate
+
+# Iniciar servidor de desarrollo
+python manage.py runserver
 ```
 
-## Estructura del Proyecto
+### Linux/Mac
 
-- src/              : Codigo fuente backend
-  - main.py         : App FastAPI
-  - app_flask.py    : App Flask (alternativa)
-  - database.py     : Configuracion SQLite/SQLAlchemy
-  - models/         : Modelos de base de datos
-- frontend/         : Codigo fuente frontend
-- tests/            : Tests
-- docs/             : Documentacion
-- .claude/          : Skills y contexto para Claude
-
-## Inicializar Base de Datos
-
-```python
-# Ejecutar en consola Python
-from src.database import init_db
-init_db()
-```
-
-## Comandos utiles
-
-### Forma rapida (recomendado):
 ```bash
-# Desde el directorio padre:
-# Windows:
-run.bat TallerVehiculos          # Ejecuta con FastAPI (default)
-run.bat TallerVehiculos fastapi  # Ejecuta con FastAPI
-run.bat TallerVehiculos flask    # Ejecuta con Flask
+# Clonar el repositorio
+git clone <url-del-repositorio>
+cd Python_TallerVehiculos
 
-# Linux/Mac:
-./run.sh TallerVehiculos         # Ejecuta con FastAPI (default)
-./run.sh TallerVehiculos fastapi # Ejecuta con FastAPI
-./run.sh TallerVehiculos flask   # Ejecuta con Flask
+# Crear y activar entorno virtual
+python -m venv .venv
+source .venv/bin/activate
+
+# Instalar dependencias
+pip install -r requirements/base.txt
+
+# Aplicar migraciones
+python manage.py migrate
+
+# Iniciar servidor de desarrollo
+python manage.py runserver
 ```
 
-### Forma manual:
+## 🎨 Carga Automática de Datos de Ejemplo
 
-#### Con FastAPI:
+**¡IMPORTANTE!** El sistema detecta automáticamente si la base de datos está vacía al iniciar y **carga datos de ejemplo** automáticamente.
+
+### ¿Cómo funciona?
+
+1. **Aplicas migraciones** → `python manage.py migrate`
+2. **Inicias el servidor** → `python manage.py runserver`
+3. **El sistema detecta** que no hay clientes en la BD
+4. **Se cargan automáticamente** todos los datos de ejemplo
+
+Los datos incluyen:
+- ✅ Usuarios con diferentes roles (admin, recepcionistas, mecánicos)
+- ✅ Clientes de prueba
+- ✅ Vehículos registrados
+- ✅ Citas programadas
+- ✅ Órdenes de trabajo
+- ✅ Inventario de repuestos
+- ✅ Proveedores
+- ✅ Facturas de ejemplo
+
+### Credenciales por Defecto
+
+**Usuario Administrador:**
+- Usuario: `admin`
+- Contraseña: `Admin1234!`
+
+**Otros usuarios disponibles:**
+- Recepcionista: `recepcion` / `Admin1234!`
+- Mecánico 1: `mecanico1` / `Admin1234!`
+- Mecánico 2: `mecanico2` / `Admin1234!`
+
+### Deshabilitar la Carga Automática
+
+Si deseas deshabilitar la carga automática de datos, edita el archivo `apps/core/apps.py` y comenta el método `ready()`.
+
+### Carga Manual de Datos
+
+También puedes cargar o recargar los datos manualmente en cualquier momento:
+
 ```bash
-# Arrancar servidor de desarrollo
-uvicorn src.main:app --reload
+# Cargar datos de ejemplo
+python manage.py seed_data
 
-# Docs interactivos disponibles en:
-# http://localhost:8000/docs
+# Borrar todo y volver a cargar (¡CUIDADO!)
+python manage.py seed_data --flush
 ```
 
-#### Con Flask:
+## 🐳 Despliegue con Docker
+
+El proyecto incluye configuración para despliegue con Docker y es compatible con Coolify.
+
 ```bash
-# Arrancar servidor de desarrollo
-python -m src.app_flask
+# Construir imagen
+docker build -t tallervehiculos .
 
-# O usando flask run:
-flask --app src.app_flask run --reload
+# Ejecutar contenedor
+docker run -p 5004:5004 \
+  -e DJANGO_SETTINGS_MODULE=config.settings.production \
+  -e SECRET_KEY=tu-clave-secreta \
+  -e ALLOWED_HOSTS=tudominio.com \
+  -e CSRF_TRUSTED_ORIGINS=https://tudominio.com \
+  tallervehiculos
 ```
 
-### Testing y Linting:
+### Variables de Entorno para Producción
+
+Crea un archivo `.env` con:
+
+```env
+DJANGO_SETTINGS_MODULE=config.settings.production
+SECRET_KEY=tu-clave-secreta-muy-larga-y-aleatoria
+ALLOWED_HOSTS=tudominio.com,www.tudominio.com
+CSRF_TRUSTED_ORIGINS=https://tudominio.com,https://www.tudominio.com
+USE_HTTPS=True
+DB_NAME=db.sqlite3
+
+# Superusuario por defecto (opcional)
+DJANGO_SUPERUSER_USERNAME=admin
+DJANGO_SUPERUSER_EMAIL=admin@taller.es
+DJANGO_SUPERUSER_PASSWORD=Admin1234!
+```
+
+## 📁 Estructura del Proyecto
+
+```
+Python_TallerVehiculos/
+├── apps/                       # Aplicaciones Django
+│   ├── core/                   # App principal (carga automática de datos)
+│   ├── usuarios/               # Gestión de usuarios y roles
+│   ├── clientes/               # Gestión de clientes
+│   ├── vehiculos/              # Gestión de vehículos
+│   ├── citas/                  # Sistema de citas
+│   ├── ordenes/                # Órdenes de trabajo
+│   ├── inventario/             # Gestión de inventario
+│   ├── compras/                # Compras y proveedores
+│   ├── facturacion/            # Facturación
+│   └── dashboard/              # Dashboard y métricas
+├── config/                     # Configuración Django
+│   ├── settings/
+│   │   ├── base.py             # Configuración base
+│   │   ├── development.py      # Configuración desarrollo
+│   │   └── production.py       # Configuración producción
+│   ├── urls.py                 # URLs principales
+│   └── wsgi.py                 # WSGI para producción
+├── templates/                  # Plantillas HTML
+├── static/                     # Archivos estáticos (CSS, JS)
+├── docker/                     # Archivos Docker
+│   └── entrypoint.sh           # Script de inicio para Docker
+├── requirements/               # Dependencias
+│   ├── base.txt                # Dependencias base
+│   ├── development.txt         # Dependencias desarrollo
+│   └── production.txt          # Dependencias producción
+├── Dockerfile                  # Configuración Docker
+├── manage.py                   # CLI de Django
+├── probar.bat                  # Script de prueba (Windows)
+└── run.sh                      # Script de ejecución (Linux/Mac)
+```
+
+## 🧪 Comandos Útiles
+
 ```bash
-# Ejecutar tests
-pytest
+# Crear migraciones
+python manage.py makemigrations
 
-# Lint
-ruff check .
-black --check .
+# Aplicar migraciones
+python manage.py migrate
+
+# Crear superusuario manualmente
+python manage.py createsuperuser
+
+# Cargar datos de ejemplo
+python manage.py seed_data
+
+# Recolectar archivos estáticos (producción)
+python manage.py collectstatic
+
+# Verificar problemas del proyecto
+python manage.py check
+
+# Abrir shell de Django
+python manage.py shell
 ```
 
-## Base de Datos SQLite
+## 🌐 URLs Importantes
 
-El proyecto usa SQLite por defecto. La base de datos se crea automaticamente en:
-- dev.db (archivo local)
+- **Página de inicio**: http://localhost:8000/
+- **Dashboard**: http://localhost:8000/dashboard/
+- **Panel de Administración**: http://localhost:8000/admin/
+- **Login**: http://localhost:8000/login/
 
-Para cambiar a PostgreSQL u otra BD, modifica DATABASE_URL en .env
-```
+## 🛠️ Tecnologías Utilizadas
+
+- **Backend**: Django 6.0
+- **Base de Datos**: SQLite (desarrollo) / compatible con PostgreSQL (producción)
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Servidor**: Gunicorn (producción)
+- **Estilos**: CSS personalizado + componentes modernos
+- **Despliegue**: Docker, compatible con Coolify
+
+## 📝 Notas de Desarrollo
+
+- El proyecto usa un modelo de usuario personalizado (`apps.usuarios.Usuario`)
+- Los datos se cargan automáticamente en el primer inicio si la BD está vacía
+- El sistema detecta si es desarrollo o producción automáticamente
+- En producción, usa Gunicorn con 3 workers por defecto
+- Los logs se guardan en la carpeta `logs/` en producción
+
+## 🤝 Contribuciones
+
+Este es un proyecto de gestión de taller. Para contribuir:
+
+1. Haz fork del repositorio
+2. Crea una rama para tu feature (`git checkout -b feat/nueva-funcionalidad`)
+3. Commit tus cambios (`git commit -m 'feat(modulo): descripción'`)
+4. Push a la rama (`git push origin feat/nueva-funcionalidad`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+[Especificar licencia aquí]
+
+## 🐛 Reporte de Bugs
+
+Si encuentras algún bug, por favor crea un issue en el repositorio con:
+- Descripción del problema
+- Pasos para reproducir
+- Comportamiento esperado vs comportamiento actual
+- Capturas de pantalla si es posible
